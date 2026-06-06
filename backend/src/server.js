@@ -8,11 +8,26 @@ const { createAuthRouter } = require("./routes/auth");
 const { createAiRouter } = require("./routes/ai");
 
 function parseClientOrigins(value) {
-  if (!value) return ["http://localhost:5173", "http://127.0.0.1:5173"];
-  return value
+  const origins = (value || "http://localhost:5173,http://127.0.0.1:5173")
     .split(",")
     .map((origin) => origin.trim())
     .filter(Boolean);
+  const expanded = new Set(origins);
+  for (const origin of origins) {
+    try {
+      const url = new URL(origin);
+      if (url.hostname === "localhost") {
+        url.hostname = "127.0.0.1";
+        expanded.add(url.origin);
+      } else if (url.hostname === "127.0.0.1") {
+        url.hostname = "localhost";
+        expanded.add(url.origin);
+      }
+    } catch {
+      continue;
+    }
+  }
+  return [...expanded];
 }
 
 function createApp(options = {}) {

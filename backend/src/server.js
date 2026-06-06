@@ -7,6 +7,14 @@ const { createDatabase } = require("./db");
 const { createAuthRouter } = require("./routes/auth");
 const { createAiRouter } = require("./routes/ai");
 
+function parseClientOrigins(value) {
+  if (!value) return ["http://localhost:5173", "http://127.0.0.1:5173"];
+  return value
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+}
+
 function createApp(options = {}) {
   const config = {
     port: Number(process.env.PORT || 4000),
@@ -15,7 +23,7 @@ function createApp(options = {}) {
     openRouterApiKey: process.env.OPENROUTER_API_KEY || "",
     defaultModel: process.env.DEFAULT_MODEL || "openrouter/auto",
     tokenLimit: Number(process.env.TOKEN_LIMIT || 1800),
-    clientOrigin: process.env.CLIENT_ORIGIN || "http://localhost:5173",
+    clientOrigin: parseClientOrigins(process.env.CLIENT_ORIGIN),
     ...options
   };
 

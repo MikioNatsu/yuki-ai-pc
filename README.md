@@ -29,6 +29,8 @@ npm install
 cp backend/.env.example backend/.env
 ```
 
+`npm install` also runs `electron-rebuild` for the Electron client's native SQLite dependency. This keeps Electron's `better-sqlite3` binary on the Electron ABI while the backend uses its own Node ABI package alias.
+
 Edit `backend/.env`:
 
 ```env
@@ -56,6 +58,8 @@ Terminal 2:
 ```bash
 npm run dev:electron
 ```
+
+The Electron dev script runs `npm run rebuild:native` before starting Vite/Electron so native SQLite stays compatible after Node/Electron upgrades.
 
 Register a local user in the Electron login page, then send chat messages. JWT is stored via keytar.
 

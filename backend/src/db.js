@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const Database = require("better-sqlite3");
+const Database = require("better-sqlite3-node");
 
 function resolveSqlitePath(databaseUrl = "./data/vr-assistant.sqlite") {
   if (databaseUrl === ":memory:") return databaseUrl;
